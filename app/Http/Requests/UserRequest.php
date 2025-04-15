@@ -7,14 +7,14 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
 
-class ModifierPostRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        //toujours à true
+        //toujours true
         return true;
     }
 
@@ -27,7 +27,9 @@ class ModifierPostRequest extends FormRequest
     {
         return [
             //obligations
-            'titre' => 'required'
+            'name' => 'required',
+            'email' => 'required|unique:users|email',
+            'password' => 'required'
         ];
     }
 
@@ -36,6 +38,7 @@ class ModifierPostRequest extends FormRequest
         //La reponse json à afficher
         throw new HttpResponseException(response()->json([
             'success' => false,
+            'status_code' => 422,
             'error' => true,
             'message' => 'Erreur de validation',
             'ErrorList' => $validator -> errors(),
@@ -46,7 +49,10 @@ class ModifierPostRequest extends FormRequest
     {
         return [
             //le message d'erreur
-            'titre.required' => 'Le titre est obligatoire',
+            'name.required' => 'Un nom doit être fourni',
+            'email.required' => 'Une adresse mail doit être fournie',
+            'email.unique' => "L'email exciste déjà",
+            'password.required' => 'Le mot de passe est requis'
         ];
     }
 }

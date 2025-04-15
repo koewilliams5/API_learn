@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PostController;
@@ -26,6 +27,14 @@ Route::put('posts/modifier/{post}',[PostController::class, 'modifier']);
 Route::delete('posts/{post}',[PostController::class, 'supprimer']);
 
 
+
+//Authentification
+
+//Inscription d'un nouvel utilisateur
+Route::post('/newUser',[UserController::class, 'newUser']);
+
+//Connexion d'un nouvel utilisateur
+Route::post('/login',[UserController::class, 'login']);
 
 
 
