@@ -54,6 +54,7 @@ class PostController extends Controller
 
             $posts->titre = $request->titre;
             $posts->description = $request->description;
+            $posts->user_id = auth()->user()->id; //A chaque création on associt id de l'utilisateur
 
             $posts->save();
 
@@ -77,7 +78,16 @@ class PostController extends Controller
             $post->titre = $request->titre;
             $post->description = $request->description;
 
-            $post->save();
+            //on vérifie si l'id rélier au poste et l'id de l'utilisateur connecté sont pareils
+            if($post->user_id === auth()->user()->id)
+            {
+                $post->save();
+            }else{
+                return response()->json([
+                    'status_code'=> 422,
+                    'status_message'=>'Modification échouée, ce poste ne vous appartient pas',
+                ]);
+            }
 
             return response()->json([
                 'status_code'=> 200,
@@ -95,7 +105,18 @@ class PostController extends Controller
     {
         try{
 
-            $post->delete();
+
+            if($post->user_id === auth()->user()->id)
+            {
+                $post->delete();
+
+
+            }else{
+                return response()->json([
+                    'status_code'=> 422,
+                    'status_message'=>'Suppression échouée, ce poste ne vous appartient pas',
+                ]);
+            }
 
             return response()->json([
                 'status_code'=> 200,

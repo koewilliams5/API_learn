@@ -15,18 +15,6 @@ use App\Http\Controllers\Api\PostController;
 Route::get('posts',[PostController::class, 'index']);
 
 
-//Ajouter des posts avec la methode |POST
-Route::post('posts/creer',[PostController::class, 'creer']);
-
-
-//Modification des posts avec la methode PUT
-Route::put('posts/modifier/{post}',[PostController::class, 'modifier']);
-
-
-//suppression des posts avec la methode PUT
-Route::delete('posts/{post}',[PostController::class, 'supprimer']);
-
-
 
 //Authentification
 
@@ -38,10 +26,28 @@ Route::post('/login',[UserController::class, 'login']);
 
 
 
+//les route sécurisé par mon middleware
+Route::middleware('auth:sanctum')->group(function(){
+
+
+    //Ajouter des posts avec la methode |POST
+    Route::post('posts/creer',[PostController::class, 'creer']);
+
+
+    //Modification des posts avec la methode PUT
+    Route::put('posts/modifier/{post}',[PostController::class, 'modifier']);
+
+
+    //suppression des posts avec la methode PUT
+    Route::delete('posts/{post}',[PostController::class, 'supprimer']);
 
 
 
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    //Permet de retourner l'utilisateur connecté
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
 });
+
